@@ -1,5 +1,5 @@
-export interface Response<T = unknown> {
+export interface Response<BodyType = unknown> {
   id: string;
-  payload: T | undefined;
+  payload: BodyType | undefined;
   wasCancelled?: boolean;
 }

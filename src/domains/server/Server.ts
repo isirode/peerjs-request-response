@@ -25,7 +25,7 @@ export class Server implements IServer {
   }
 
   protected async handle(data: any, connection?: DataConnection): Promise<void> {
-    const request = this.mapper.map(data);
+    const request = this.mapper.unwrap(data);
     if  (request === undefined) {
       return;
     }

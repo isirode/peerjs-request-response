@@ -16,6 +16,7 @@ import { IClientMapper } from './port/IClientMapper';
 export class Client implements IClient {
 
   connection: DataConnection;
+  // FIXME : should it be typed ?
   mapper: IClientMapper;
   intervalTime: number;
   throwOnCancellation?: boolean;
@@ -40,8 +41,8 @@ export class Client implements IClient {
     });
   }
 
-  async fetch<T = unknown, U = unknown>(request: Request<T>): Promise<Response<U>> {
-    this.connection.send(this.mapper.wrap(request));
+  async fetch<RequestBodyType = undefined, ResponseBodyType = undefined>(request: Request<RequestBodyType>): Promise<Response<ResponseBodyType>> {
+    this.connection.send(this.mapper.wrap(request as Request<undefined>));
     let response: Response | undefined;
     let isCancelled = false;
     await pWaitFor(() => {
@@ -70,11 +71,11 @@ export class Client implements IClient {
       throw new Error(`the request timed out before receiving a response`);
     }
     // FIXME : is there a way to handle the casting better than this ?
-    return response as Response<U>;
+    return response as Response<ResponseBodyType>;
   }
 
   protected handle(data: any) {
-    const response = this.mapper.map(data);
+    const response = this.mapper.unwrap(data);
     if (response === undefined) {
       return;
     }

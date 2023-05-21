@@ -1,6 +1,6 @@
 {
   "name": "peerjs-request-response",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "This is a WebRTC request / response library made using PeerJS",
   "main": "dist/main.js",
   "source": "src/index.ts",
