@@ -43,14 +43,14 @@ export class Client<RequestBodyType = undefined, ResponseBodyType = undefined> i
 
   async fetch(request: Request<RequestBodyType>): Promise<Response<ResponseBodyType>> {
     this.connection.send(this.mapper.wrap(request));
-    let response: Response | undefined;
+    let response: Response<ResponseBodyType> | undefined;
     let isCancelled = false;
     await pWaitFor(() => {
       isCancelled = this.cancelledRequest.has(request.id);
       if (isCancelled) {
         return true;
       }
-      response = this.responses.get(request.id);
+      response = this.responses.get(request.id) as Response<ResponseBodyType>;
       return response !== undefined;
     }, {
       timeout: request.timeout,
