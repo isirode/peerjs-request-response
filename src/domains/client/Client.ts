@@ -10,14 +10,14 @@ import { IClientMapper } from './port/IClientMapper';
 // Should we send a cancelled notification to the remote side ?
 // Should it be an instance per connection ?
 // Should it be bidirectional ?
-// FIXME : should we type the client ?
 // It is used for a connection only
 // TODO : make a static client ?
-export class Client implements IClient {
+// Warn : we have to type the client
+export class Client<RequestBodyType = undefined, ResponseBodyType = undefined> implements IClient<RequestBodyType, ResponseBodyType> {
 
   connection: DataConnection;
   // FIXME : should it be typed ?
-  mapper: IClientMapper;
+  mapper: IClientMapper<RequestBodyType, ResponseBodyType>;
   intervalTime: number;
   throwOnCancellation?: boolean;
   clearOnStop?: boolean;
@@ -27,7 +27,7 @@ export class Client implements IClient {
   awaitingResponse: Map<string, Request> = new Map();
   responses: Map<string, Response> = new Map();
 
-  constructor(connection: DataConnection, mapper: IClientMapper, intervalTime?: number, throwOnCancellation?: boolean, clearOnStop?: boolean) {
+  constructor(connection: DataConnection, mapper: IClientMapper<RequestBodyType, ResponseBodyType>, intervalTime?: number, throwOnCancellation?: boolean, clearOnStop?: boolean) {
     this.connection = connection;
     this.mapper = mapper;
     this.intervalTime = intervalTime ? intervalTime : 100;
@@ -41,8 +41,8 @@ export class Client implements IClient {
     });
   }
 
-  async fetch<RequestBodyType = undefined, ResponseBodyType = undefined>(request: Request<RequestBodyType>): Promise<Response<ResponseBodyType>> {
-    this.connection.send(this.mapper.wrap(request as Request<undefined>));
+  async fetch(request: Request<RequestBodyType>): Promise<Response<ResponseBodyType>> {
+    this.connection.send(this.mapper.wrap(request));
     let response: Response | undefined;
     let isCancelled = false;
     await pWaitFor(() => {
