@@ -3,13 +3,13 @@ import { IServer } from "./IServer";
 import { IServerMapper } from "./port/IServerMapper";
 import { IServerHandler } from "./port/IServerHandler";
 
-export class Server implements IServer {
+export class Server<MessageType = unknown, RequestBodyType = unknown, ResponseBodyType = unknown> implements IServer<MessageType, RequestBodyType, ResponseBodyType> {
 
-  mapper: IServerMapper;
-  handler: IServerHandler;
+  handler: IServerHandler<RequestBodyType, ResponseBodyType>;
+  mapper: IServerMapper<MessageType, RequestBodyType, ResponseBodyType>;
   connection?: DataConnection;
 
-  constructor(mapper: IServerMapper, handler: IServerHandler, connection?: DataConnection) {
+  constructor(mapper: IServerMapper<MessageType, RequestBodyType, ResponseBodyType>, handler: IServerHandler<RequestBodyType, ResponseBodyType>, connection?: DataConnection) {
     this.mapper = mapper;
     this.handler = handler;
     this.connection = connection;
