@@ -35,7 +35,12 @@ export class Server<MessageType = unknown, RequestBodyType = unknown, ResponseBo
     if  (request === undefined) {
       return;
     }
-    const response = this.handler.handle(request);
+    // FIXME : the connection should not accept a promise as it does not make sense
+    // and binarypack does not support it
+    const response = await this.handler.handle(request);
+    if (this.connection !== undefined && connection !== undefined) {
+      console.warn(`both the server's connection and the function connection parameter are present, it might be an error`);
+    }
     this.connection?.send(response);
     connection?.send(response);
   }

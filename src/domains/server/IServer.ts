@@ -7,5 +7,6 @@ export interface IServer<MessageType = unknown, RequestBodyType = unknown, Respo
   mapper: IServerMapper<MessageType, RequestBodyType, ResponseBodyType>;
   listen(): void;
   stop(): void;
+  // TODO : type data as MessageType if possible
   handle(data: any, connection?: DataConnection): Promise<void>;
 }
