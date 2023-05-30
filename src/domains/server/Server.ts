@@ -20,14 +20,14 @@ export class Server<MessageType = unknown, RequestBodyType = unknown, ResponseBo
     if (this.connection === undefined) {
       throw new Error(`connection is undefined`);
     }
-    this.connection?.on('data', this.handle);
+    this.connection.on('data', this.handle);
   }
 
   stop() {
     if (this.connection === undefined) {
       throw new Error(`connection is undefined`);
     }
-    this.connection?.off('data', this.handle);
+    this.connection.off('data', this.handle);
   }
 
   public async handle(data: any, connection?: DataConnection): Promise<void> {
