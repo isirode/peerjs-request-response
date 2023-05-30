@@ -17,14 +17,20 @@ export class Server<MessageType = unknown, RequestBodyType = unknown, ResponseBo
 
   listen() {
     // FIXME : log a warning if the connection is not present ?
+    if (this.connection === undefined) {
+      throw new Error(`connection is undefined`);
+    }
     this.connection?.on('data', this.handle);
   }
 
   stop() {
+    if (this.connection === undefined) {
+      throw new Error(`connection is undefined`);
+    }
     this.connection?.off('data', this.handle);
   }
 
-  protected async handle(data: any, connection?: DataConnection): Promise<void> {
+  public async handle(data: any, connection?: DataConnection): Promise<void> {
     const request = this.mapper.unwrap(data);
     if  (request === undefined) {
       return;

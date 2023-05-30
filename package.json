@@ -1,11 +1,12 @@
 {
   "name": "peerjs-request-response",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "This is a WebRTC request / response library made using PeerJS",
   "main": "dist/main.js",
   "source": "src/index.ts",
   "types": "dist/types.d.ts",
   "scripts": {
+    "doInstall": "npm install",
     "test": "jest --config jest.config.js",
     "start": "parcel --no-cache",
     "prebuild": "rimraf dist",
