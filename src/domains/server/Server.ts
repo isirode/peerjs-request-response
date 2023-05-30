@@ -38,11 +38,12 @@ export class Server<MessageType = unknown, RequestBodyType = unknown, ResponseBo
     // FIXME : the connection should not accept a promise as it does not make sense
     // and binarypack does not support it
     const response = await this.handler.handle(request);
+    const actualResponse = this.mapper.wrap(response);
     if (this.connection !== undefined && connection !== undefined) {
       console.warn(`both the server's connection and the function connection parameter are present, it might be an error`);
     }
-    this.connection?.send(response);
-    connection?.send(response);
+    this.connection?.send(actualResponse);
+    connection?.send(actualResponse);
   }
 
 }
